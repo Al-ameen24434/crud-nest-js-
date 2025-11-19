@@ -1,6 +1,17 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import type { Post as PostInterface } from './interfaces/post.interface';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -22,5 +33,11 @@ export class PostsController {
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number): PostInterface {
     return this.postsService.findOne(id);
+  }
+
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() createPostData: CreatePostDto): PostInterface {
+    return this.postsService.create(createPostData);
   }
 }
