@@ -24,4 +24,28 @@ export class PostsService {
 
     return singlePost;
   }
+
+  create(createPostData: Omit<Post, 'id' | 'createdAt'>): Post {
+    const newPost: Post = {
+      id: this.generateId(),
+      ...createPostData,
+      createdAt: new Date(),
+    };
+    this.posts.push(newPost);
+    return newPost;
+  }
+
+  // private getNextId(): number {
+  //   return this.posts.length > 0
+  //     ? Math.max(
+  //         ...this.posts.map((post) =>
+  //           typeof post.id === 'number' ? post.id : 0,
+  //         ),
+  //       ) + 1
+  //     : 1;
+  // }
+
+  private generateId(): number {
+    return parseInt(Math.random().toString(36).substr(2, 9), 10);
+  }
 }
