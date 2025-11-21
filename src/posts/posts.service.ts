@@ -26,8 +26,9 @@ export class PostsService {
   }
 
   create(createPostData: Omit<Post, 'id' | 'createdAt'>): Post {
-    const newPost: Post = {
-      id: this.generateId(),
+    const userByHighestId = [...this.posts].sort((a, b) => b.id - a.id);
+    const newPost = {
+      id: userByHighestId[0].id + 1,
       ...createPostData,
       createdAt: new Date(),
     };
@@ -45,7 +46,7 @@ export class PostsService {
   //     : 1;
   // }
 
-  private generateId(): number {
-    return parseInt(Math.random().toString(36).substr(2, 9), 10);
-  }
+  // private generateId(): number {
+  //   return parseInt(Math.random().toString(36).substr(2, 9), 10);
+  // }
 }
