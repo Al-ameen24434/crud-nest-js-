@@ -7,10 +7,11 @@ import { UsersModule } from './users/users.module';
 import { TweetModule } from './tweet/tweet.module';
 import { DatabaseModule } from './database/database.module';
 import { EmployeesModule } from './employees/employees.module';
+import { DatabaseService } from './database/database.service';
 
 @Module({
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseService],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
@@ -22,5 +23,6 @@ import { EmployeesModule } from './employees/employees.module';
     DatabaseModule,
     EmployeesModule,
   ],
+  exports: [DatabaseService],
 })
 export class AppModule {}
