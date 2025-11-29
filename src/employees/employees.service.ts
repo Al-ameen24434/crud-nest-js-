@@ -14,22 +14,27 @@ export class EmployeesService {
   async findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
     if (role)
       return this.databaseService.empoyee.findMany({
-        where: { role },
+        where: { role: role },
       });
     return this.databaseService.empoyee.findMany();
   }
 
   async findOne(id: number) {
     return this.databaseService.empoyee.findUnique({
-      where: { id },
+      where: { id: id },
     });
   }
 
   async update(id: number, updateEmployeeDto: Prisma.EmpoyeeUpdateInput) {
-    return;
+    return this.databaseService.empoyee.update({
+      where: { id: id },
+      data: updateEmployeeDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async remove(id: number) {
+    return this.databaseService.empoyee.delete({
+      where: { id: id },
+    });
   }
 }
