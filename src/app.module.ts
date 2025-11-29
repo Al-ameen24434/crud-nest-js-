@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
@@ -10,6 +11,16 @@ import { EmployeesModule } from './employees/employees.module';
 @Module({
   controllers: [AppController],
   providers: [AppService],
-  imports: [PostsModule, UsersModule, TweetModule, DatabaseModule, EmployeesModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    PostsModule,
+    UsersModule,
+    TweetModule,
+    DatabaseModule,
+    EmployeesModule,
+  ],
 })
 export class AppModule {}
