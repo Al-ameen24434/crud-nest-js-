@@ -9,14 +9,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
-import { Prisma } from 'generated/prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Controller('employees')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @Post()
-  create(@Body() createEmployeeDto: Prisma.EmpoyeeCreateInput) {
+  create(@Body() createEmployeeDto: Prisma.EmployeeCreateInput) {
     return this.employeesService.create(createEmployeeDto);
   }
 
@@ -33,7 +33,7 @@ export class EmployeesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateEmployeeDto: Prisma.EmpoyeeUpdateInput,
+    @Body() updateEmployeeDto: Prisma.EmployeeUpdateInput,
   ) {
     return this.employeesService.update(+id, updateEmployeeDto);
   }

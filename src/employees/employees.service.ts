@@ -1,40 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'generated/prisma/client';
-import { DatabaseService } from 'src/database/database.service';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class EmployeesService {
-  constructor(private readonly databaseService: DatabaseService) {}
-  async create(createEmployeeDto: Prisma.EmpoyeeCreateInput) {
-    return this.databaseService.empoyee.create({
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createEmployeeDto: Prisma.EmployeeCreateInput) {
+    return this.prisma.employee.create({
       data: createEmployeeDto,
     });
   }
 
   async findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
-    if (role)
-      return this.databaseService.empoyee.findMany({
-        where: { role: role },
+    if (role) {
+      return this.prisma.employee.findMany({
+        where: { role },
       });
-    return this.databaseService.empoyee.findMany();
+    }
+    return this.prisma.employee.findMany();
   }
 
   async findOne(id: number) {
-    return this.databaseService.empoyee.findUnique({
-      where: { id: id },
+    return this.prisma.employee.findUnique({
+      where: { id },
     });
   }
 
-  async update(id: number, updateEmployeeDto: Prisma.EmpoyeeUpdateInput) {
-    return this.databaseService.empoyee.update({
-      where: { id: id },
+  async update(id: number, updateEmployeeDto: Prisma.EmployeeUpdateInput) {
+    return this.prisma.employee.update({
+      where: { id },
       data: updateEmployeeDto,
     });
   }
 
   async remove(id: number) {
-    return this.databaseService.empoyee.delete({
-      where: { id: id },
+    return this.prisma.employee.delete({
+      where: { id },
     });
   }
 }
