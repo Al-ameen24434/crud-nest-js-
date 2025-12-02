@@ -5,24 +5,26 @@ import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { TweetModule } from './tweet/tweet.module';
-import { DatabaseModule } from './database/database.module';
+
 import { EmployeesModule } from './employees/employees.module';
-import { DatabaseService } from './database/database.service';
+
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   controllers: [AppController],
-  providers: [AppService, DatabaseService],
+  providers: [AppService],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: `${process.cwd()}/.env`,
     }),
     PostsModule,
     UsersModule,
     TweetModule,
-    DatabaseModule,
+
     EmployeesModule,
+    PrismaModule,
   ],
-  exports: [DatabaseService],
+  exports: [PrismaModule],
 })
 export class AppModule {}
