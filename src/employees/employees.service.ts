@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -7,9 +11,16 @@ export class EmployeesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createEmployeeDto: Prisma.EmployeeCreateInput) {
-    return this.prisma.employee.create({
-      data: createEmployeeDto,
-    });
+    try {
+      return await this.prisma.employee.create({
+        data: createEmployeeDto,
+      });
+    } catch (err) {
+      if (err.code === 'P2002') {
+        throw new BadRequestException('Email already exists');
+      }
+      throw err;
+    }
   }
 
   async findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
@@ -22,21 +33,41 @@ export class EmployeesService {
   }
 
   async findOne(id: number) {
-    return this.prisma.employee.findUnique({
+    const employee = await this.prisma.employee.findUnique({
       where: { id },
     });
+
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${id} not found`);
+    }
+
+    return employee;
   }
 
   async update(id: number, updateEmployeeDto: Prisma.EmployeeUpdateInput) {
-    return this.prisma.employee.update({
-      where: { id },
-      data: updateEmployeeDto,
-    });
+    try {
+      return await this.prisma.employee.update({
+        where: { id },
+        data: updateEmployeeDto,
+      });
+    } catch (err) {
+      if (err.code === 'P2025') {
+        throw new NotFoundException(`Employee with ID ${id} not found`);
+      }
+      throw err;
+    }
   }
 
   async remove(id: number) {
-    return this.prisma.employee.delete({
-      where: { id },
-    });
+    try {
+      return await this.prisma.employee.delete({
+        where: { id },
+      });
+    } catch (err) {
+      if (err.code === 'P2025') {
+        throw new NotFoundException(`Employee with ID ${id} not found`);
+      }
+      throw err;
+    }
   }
 }
